@@ -109,10 +109,7 @@ Once we finalize on the target lane and at what velocity car should move, a traj
 
 Using the vehicle prediction, behavioral planning and trajectory generation and the input data from the simulator and existing map data. The program is able to drive the simulated vehicle safely and efficiently around the loop maximizing the speed while avoiding the collisions. 
 
-![youtubevideo](http://i3.ytimg.com/vi/gitIcOqQcXI/hqdefault.jpg)
-
-![youtube video](https://youtu.be/gitIcOqQcXI) 
-
+[![Path Planning youtube video](https://img.youtube.com/vi/gitIcOqQcXI/0.jpg)](https://www.youtube.com/watch?v=gitIcOqQcXI)
 
 
 
