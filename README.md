@@ -24,6 +24,7 @@ Techniques used while designing
 [path-planning]: ./images/pathplanning.png
 [highway]: ./images/diagram.png
 [result]: ./images/myvideo.png
+[youtube]: ./images/youtube.png
 
 ### Technologies used
 
@@ -62,9 +63,59 @@ cmake .. && make
 # in a separate terminal, start the simulator
 ```
 
+## Highway Path planning
 
-### Goals
+![Path planning diagram][highway]
+
+### Search and Cost Functions
+
+The fundamental problem in path planning is to find the optimal path from the start to the goal, given a map of the world, locations of all objects in the map, a starting location, a goal location, and a [cost function](https://en.wikipedia.org/wiki/Loss_function). The "cost" in this case refers to the penalty involved in taking a particular path; for example, driving primarily on two lane 30 MPH roads to navigate between New York City and Los Angeles would have a high cost; most of the driving instead should occur on Interstate highways, which would have a much lower cost. Various actions that the vehicle can take incur different costs; left turns, right turns, driving forward, driving backward, stopping, and other actions will all incur costs, which may vary depending on the current speed or location of the vehicle.
+
+Various [algorithms](https://en.wikipedia.org/wiki/Motion_planning#Algorithms) exist for searching for a path; [grid](https://en.wikipedia.org/wiki/Motion_planning#Grid-based_search)- and [interval](https://en.wikipedia.org/wiki/Motion_planning#Interval-based_search)-based search algorithms (such as [A*](https://en.wikipedia.org/wiki/A*_search_algorithm)) are popular, and many other algorithms involving [rewards](https://en.wikipedia.org/wiki/Motion_planning#Reward-based_algorithms) or [probabilistic sampling](https://en.wikipedia.org/wiki/Motion_planning#Sampling-based_algorithms) exist as well.
+
+### Prediction
+
+Prediction is a mechanism which forecasts what other vehicles does in a complex environment.For example, when a vehicle is detected by the radar/lidar or perception systems, the prediction system must be able to answer "where will be the vehicle in next 5 seconds". This happens by taking as input a map of the world and data from sensor fusion such as RADAR or LIDAR data and then generating the future state of all other vheicles and moving objects in the local environment. Moving objects in this case could be animals or pedestrians as well. Prediction system generate [multi-modal probability distributions](https://en.wikipedia.org/wiki/Multimodal_distribution), which means that the estimates they create may have multiple likely outcomes. Information about what vehicles generally do at certain locations in the world, coupled with the current and recent past behavior of a vehicle, inform the prediction to make certain outcomes more or less likely. For example, a car slowing down as it approaches a turn increases the likelihood of a turn.
+
+### Behavior Planning
+
+Behavior planning answers the question of "what do to next" in an autonomous vehicle. Behavior planners use inputs from a map, route to destination, and localization and prediction information, and  output a high-level driving instruction which is sent to the trajectory generator. Behavior planners do not execute as frequently as other autonomous vehicle systems (such as a sensor fusion system), partially because they require a large volume of input to generate a plan, but also because their output plans will not change as frequently as outputs from other systems. A behavior planner acts as a navigator, whose output might be "speed up", or "get in the right lane", including behaviors which are feasible, safe, legal, and efficient.
+
+
+### Trajectory generation
+
+A trajectory generator creates a path that the vehicle should follow and the time sequence for following it, ensuring that the path is safe, collision-free, and comfortable for the vehicle and passengers. This happens by using the current vehicle state (location, speed, heading, etc), the destination vehicle state, and constraints on the trajectory (based on a map, physics, traffic, pedestrians, etc). Many methods exists for this: combinatorial, potential field, optimal control, sampling, etc. For example, Hybrid A* is a sampling method, which looks at free space around a vehicle to identify possible collisions, and is great for unstructured environments such as parking lots (without many constraints).
+Behavior planners often use [finite state machines](https://en.wikipedia.org/wiki/Finite_state_machine), which encode a fixed set of possible states and allowable transitions between states. For example, when driving on a highway, the states might include "stay in lane", "change to right lane", or "get ready for left lane change". Each state has a specific set of behaviors; for example, "stay in lane" requires staying in the center of the lane and matching speed with the vehicle ahead up to the speed limit. Selecting a new state from a given state requires a cost function, which allows for selecting the optimal state for driving to the goal. Cost functions often include as inputs current speed, target speed, current lane, target lane, and distance to goal, among others.
+
+
+### Implementation and Goal
 In this project your goal is to safely navigate around a virtual highway with other traffic that is driving +-10 MPH of the 50 MPH speed limit. You will be provided the car's localization and sensor fusion data, there is also a sparse map list of waypoints around the highway. The car should try to go as close as possible to the 50 MPH speed limit, which means passing slower traffic when possible, note that other cars will try to change lanes too. The car should avoid hitting other cars at all cost as well as driving inside of the marked road lanes at all times, unless going from one lane to another. The car should be able to make one complete loop around the 6946m highway. Since the car is trying to go 50 MPH, it should take a little over 5 minutes to complete 1 loop. Also the car should not experience total acceleration over 10 m/s^2 and jerk that is greater than 10 m/s^3.
+
+
+### Vehcile Prediction
+
+The [vehicle tracking](src/main.cpp#L226-L275) section of code is responsible for using data from the sensor fusion measurements to determine where other vehicles are relative to controlled vehicle. This includes detecting the vehicles directly to the left, ahead and right and determining how much empty space exists between these vehicles. This information is used for lane change decision making system.
+
+### Behavioral Planning - speed control - lane change decision
+
+The [lane change decision making](src/main.cpp#L278-L291) system determines if the vehicle should attempt to change lanes if it is currently travellling at less than 90% of the maximum speed (50 MPH) and the vehicle is following less than 50 units behind the vehicle in front of it. Once that determination is made, the vehicle looks to both the left and right for an opening with no other vehicles. In case both lanes are open then the lane with farthest vehicle in that lane is chosen.
+
+
+### Trajectory generation
+
+Once we finalize on the target lane and at what velocity car should move, a trajectory is calculated several steps into the future [trajectory generation](src/main.cpp#L23-L121). During the first run, the vehicles' location and previous point using the vehciles' yaw angle are computed. These points are converted to x-y co-ordinates, and they are angle corrected for vehicles orientation in the environment. Then the spline interpolation is used for computing the additional trajectory points which when combined with any previous trajectory points from a previous iteration not traveled, to bring the total number of points upto 50. These points are then handed off to the simulator for the vehicle to follow.
+
+
+## Final Video
+
+Using the vehicle prediction, behavioral planning and trajectory generation and the input data from the simulator and existing map data. The program is able to drive the simulated vehicle safely and efficiently around the loop maximizing the speed while avoiding the collisions. 
+
+[thumbnail](http://i3.ytimg.com/vi/gitIcOqQcXI/hqdefault.jpg)
+
+[youtube link of the video](https://youtu.be/gitIcOqQcXI) 
+
+
+
 
 #### The map of the highway is in data/highway_map.txt
 Each waypoint in the list contains  [x,y,s,dx,dy] values. x and y are the waypoint's map coordinate position, the s value is the distance along the road to get to that waypoint in meters, the dx and dy values define the unit normal vector pointing outward of the highway loop.
