@@ -111,7 +111,7 @@ Using the vehicle prediction, behavioral planning and trajectory generation and 
 
 ![youtubevideo](http://i3.ytimg.com/vi/gitIcOqQcXI/hqdefault.jpg)
 
-[youtube link of the video](https://youtu.be/gitIcOqQcXI) 
+![youtube video](https://youtu.be/gitIcOqQcXI) 
 
 
 
