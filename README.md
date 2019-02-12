@@ -1,13 +1,67 @@
 # CarND-Path-Planning-Project
 Self-Driving Car Engineer Nanodegree Program
+
+
+## Introduction
    
+**[Path planning](https://en.wikipedia.org/wiki/Motion_planning)** systems enable an autonomous vehicle to generate safe, drivable [trajectories](https://en.wikipedia.org/wiki/Trajectory) to get from one point to another. Given information about it's environment from computer vision and sensor fusion such as  vehicle detection and localization and a destination, a path planner will produce speed and turning commands for control systems to actuate.
+
+![Highway Path Planning][path-planning]
+
+A path planner includes mainly three components: a vehicle predictor, a behavioral planner and trajectory generator. **Vehicle Prediction** invloves estimating twhat other vehicles in the local environment might do next. **Behavioral Planning** decides what action to take next, given the end destination and the estimate from the vehicle prediction step. **Trajectory generation** computes an actual path to follow based on the output from the behavior planning step.
+
+
+This repostirory contains a vehicle planner implementation which navigates a simulated vehicle around a virtual hightway with other oncoming or same direction traffic. The vehicle attempts to keep a close to the speed limit (50kmph) as possible, while maintaining the safe driving distances from other vehicles and from the side of the road as well. This also involves comfortable ridiing experience without any jerks. This involves swithcing lanes, passing vehicles, speeding up and slowing down.
+
+Techniques used while designing 
+*  Vehicle Tracking
+*  Lane change decision making
+*  speed control
+*  Trajectory generation
+
+
+[//]: # (Image References)
+[path-planning]: ./images/pathplanning.png
+[highway]: ./images/diagram.png
+[result]: ./images/myvideo.png
+
+### Technologies used
+
+* C++
+* uWebSockets
+* Eigen
+* Cubic Spline Interpolation
+* PID control
+
+
+### Repository Contents
+
+* [README.md](README.md) - this readme
+* [main.cpp](src/main.cpp) - program entry point; communicates with simulator, executes path planning algorithm
+* [spline.h](src/spline.h) - spline interpolation
+* [PID.cpp](src/PID.cpp) - basic PID controller
+
+
 ### Simulator.
-You can download the Term3 Simulator which contains the Path Planning Project from the [releases tab (https://github.com/udacity/self-driving-car-sim/releases/tag/T3_v1.2).  
+You can download the Term3 Simulator which contains the Path Planning Project from the [releases tab (https://github.com/udacity/self-driving-car-sim/releases/tag/T3_v1.2)]
 
 To run the simulator on Mac/Linux, first make the binary file executable with the following command:
 ```shell
 sudo chmod u+x {simulator_file_name}
 ```
+
+## Running code from this repository
+
+Running the code in this repository requires the Udacity Term 2 Simulator contents to be properly installed. Click [here](https://github.com/udacity/self-driving-car-sim/releases) for details. This will include installing the simulator itself and the uWebSocketIO library.
+
+Once that is complete,
+```sh
+mkdir build && cd build
+cmake .. && make
+./path_planning
+# in a separate terminal, start the simulator
+```
+
 
 ### Goals
 In this project your goal is to safely navigate around a virtual highway with other traffic that is driving +-10 MPH of the 50 MPH speed limit. You will be provided the car's localization and sensor fusion data, there is also a sparse map list of waypoints around the highway. The car should try to go as close as possible to the 50 MPH speed limit, which means passing slower traffic when possible, note that other cars will try to change lanes too. The car should avoid hitting other cars at all cost as well as driving inside of the marked road lanes at all times, unless going from one lane to another. The car should be able to make one complete loop around the 6946m highway. Since the car is trying to go 50 MPH, it should take a little over 5 minutes to complete 1 loop. Also the car should not experience total acceleration over 10 m/s^2 and jerk that is greater than 10 m/s^3.
@@ -15,9 +69,7 @@ In this project your goal is to safely navigate around a virtual highway with ot
 #### The map of the highway is in data/highway_map.txt
 Each waypoint in the list contains  [x,y,s,dx,dy] values. x and y are the waypoint's map coordinate position, the s value is the distance along the road to get to that waypoint in meters, the dx and dy values define the unit normal vector pointing outward of the highway loop.
 
-The highway's waypoints loop around so the frenet s value, distance along the road, goes from 0 to 6945.554.
-
-## Basic Build Instructions
+The highway's waypoints loop around so the frenet s value, distance along the road, goes from 0 to 6945.554.## Basic Build Instructions
 
 1. Clone this repo.
 2. Make a build directory: `mkdir build && cd build`

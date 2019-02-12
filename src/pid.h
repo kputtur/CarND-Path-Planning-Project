@@ -39,7 +39,7 @@ class PID {
   /*
    * Update the PID error variables given error and return the new control value.
    */
-  double compute_control_value(const double error);
+  const double compute_control_value(double error);
 
   /*
    * Calculate reset, and return the total PID error.
@@ -47,4 +47,4 @@ class PID {
   double get_and_reset_total_error();
 };
 
-#endif /* PID_H */
+#endif /* pid_h */

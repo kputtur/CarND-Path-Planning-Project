@@ -5,7 +5,7 @@
  *
  *
  */
-#include "PID.h"
+#include "pid.h"
 
 #include <cmath>
 #include <numeric>
@@ -23,7 +23,7 @@ PID::PID() {
 }
 
 // destructor
-PID::~PID() {}
+//PID::~PID() {}
 
 
 // initialize PID.
@@ -48,7 +48,7 @@ void PID::get_parameters(double new_parameters[]) {
 }
 
 //compute control value
-double PID::compute_control_value(const double cross_track_error) {
+const double PID::compute_control_value(double cross_track_error) {
   previous_cross_track_error_ = current_cross_track_error_;
   current_cross_track_error_ = cross_track_error;
   errors_.push_back(std::abs(cross_track_error));
