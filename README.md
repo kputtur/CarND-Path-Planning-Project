@@ -39,7 +39,7 @@ Techniques used while designing
 * [README.md](README.md) - this readme
 * [main.cpp](src/main.cpp) - program entry point; communicates with simulator, executes path planning algorithm
 * [spline.h](src/spline.h) - spline interpolation
-* [PID.cpp](src/PID.cpp) - basic PID controller
+* [pid.cpp](src/pid.cpp) - basic PID controller
 
 
 ### Simulator.
