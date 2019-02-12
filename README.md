@@ -23,8 +23,7 @@ Techniques used while designing
 [//]: # (Image References)
 [path-planning]: ./images/pathplanning.png
 [highway]: ./images/diagram.png
-[result]: ./images/myvideo.png
-[youtube]: ./images/youtube.png
+[result]: ./images/youtube_grab.png
 
 ### Technologies used
 
